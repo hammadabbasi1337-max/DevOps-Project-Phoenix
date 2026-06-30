@@ -26,6 +26,13 @@ RUN npm install --omit=dev --no-audit --no-fund \
 COPY index.js ./
 COPY --from=build /app/dist ./dist
 
+# Create the logs directory (this is where the bind mount will attach)
+# and hand ownership of the whole app to the built-in 'node' user.
+RUN mkdir -p /app/logs && chown -R node:node /app
+
+# Security Upgrade: drop root privileges, run as the restricted 'node' user
+USER node
+
 EXPOSE 5000
 
 CMD ["node", "index.js"]
