@@ -10,8 +10,8 @@ mongoose.connect(dbUri)
   .then(() => console.log('Connected to MongoDB!'))
   .catch(err => console.error('Failed to connect:', err));
 
-// SABOTAGE 2: Express is looking for a 'public' folder, but Vite builds to 'dist'!
-const uiPath = path.join(__dirname, 'public'); 
+// FIXED: Vite builds the frontend into 'dist', so Express must serve from there.
+const uiPath = path.join(__dirname, 'dist'); 
 app.use(express.static(uiPath));
 
 app.get('/api/health', (req, res) => res.json({ status: 'API is alive' }));
