@@ -1,0 +1,23 @@
+services:
+  api:
+    build: .
+    image: phoenix-app
+    ports:
+      - "8080:5000"
+    environment:
+      # Sabotage fix: app expects DATABASE_URI specifically, and we use the
+      # service name 'database' so Docker's internal DNS resolves it
+      # (no localhost, since api and database are separate containers).
+      - DATABASE_URI=mongodb://database:27017/phoenix
+    depends_on:
+      - database
+
+  database:
+    image: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
